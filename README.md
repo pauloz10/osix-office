@@ -1,4 +1,4 @@
-# OsiX Office — Fedora bootstrap
+# OsiX Office
 
 OsiX Office is a fully offline, open-source desktop office-suite project focused on Microsoft Office interoperability, with Excel/XLSX compatibility as the highest priority.
 
@@ -23,15 +23,16 @@ WordCraft components may be evaluated only where their MIT/Apache-2.0 licensing 
 
 The first builds may expose these through a unified OsiX Office shell while the project evolves.
 
-## What this kit does
+## What this repository does
 
-1. Installs Fedora/Tauri build prerequisites.
-2. Fetches a pinned Euro-Office Lite source release.
-3. Applies OsiX Office product branding and Microsoft-format file associations.
-4. Configures Tauri to build both RPM and AppImage packages.
-5. Builds local Fedora x86_64 packages.
-6. Runs structural OOXML smoke tests against representative documents.
-7. Keeps AI/cloud dependencies outside the project.
+1. Maintains a reproducible OsiX patch/configuration layer over a pinned upstream revision.
+2. Installs Fedora/Tauri build prerequisites.
+3. Fetches a pinned Euro-Office Lite source release.
+4. Applies OsiX Office product branding and Microsoft-format file associations.
+5. Configures Tauri to build both RPM and AppImage packages.
+6. Builds local Fedora x86_64 packages.
+7. Runs structural OOXML smoke tests against representative documents.
+8. Keeps AI/cloud dependencies outside the project.
 
 ## Build on Fedora
 

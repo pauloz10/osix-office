@@ -1,0 +1,12 @@
+OsiX Office project code is licensed under the GNU Affero General Public License,
+version 3 or (at your option) any later version: AGPL-3.0-or-later.
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+
+The canonical licence text is published by the Free Software Foundation at:
+https://www.gnu.org/licenses/agpl-3.0.txt
+
+Before any binary/source release is distributed, the complete AGPL-3.0 licence
+text from the pinned upstream source must also be included in the release bundle.
+This repository intentionally does not substitute a modified or reconstructed
+licence text for the canonical licence.
