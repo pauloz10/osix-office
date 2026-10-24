@@ -14,7 +14,7 @@ class FedoraBuildContractTest(unittest.TestCase):
 
     def test_fedora_workflow_has_linux_build_dependencies(self):
         s = (ROOT / ".github" / "workflows" / "build-fedora.yml").read_text()
-        for item in ("gh ", "rsync", "bc ", "java-17-openjdk-headless", "python3-pillow"):
+        for item in ("gh ", "rsync", "bc", "java-25-openjdk-headless", "python3-pillow"):
             self.assertIn(item, s)
 
     def test_linux_sidecar_resources_are_bundled(self):
