@@ -66,21 +66,37 @@ jobs:
       - name: Run OsiX tests
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
 
-      - name: Build RPM and AppImage
+      - name: Build RPM
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./scripts/04-build.sh
+        run: ./scripts/04-build.sh rpm
 
-      - name: Collect packages
+      - name: Collect RPM
         run: ./scripts/06-collect-artifacts.sh
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload RPM
+        uses: actions/upload-artifact@v4
         with:
-          name: osix-office-fedora-x86_64
+          name: osix-office-fedora-rpm-x86_64
           if-no-files-found: error
-          path: |
-            dist/*.rpm
-            dist/*.AppImage
+          path: dist/*.rpm
+
+      - name: Build AppImage
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APPIMAGE_EXTRACT_AND_RUN: "1"
+          NO_STRIP: "true"
+        run: ./scripts/04-build.sh appimage
+
+      - name: Collect AppImage
+        run: ./scripts/06-collect-artifacts.sh
+
+      - name: Upload AppImage
+        uses: actions/upload-artifact@v4
+        with:
+          name: osix-office-fedora-appimage-x86_64
+          if-no-files-found: error
+          path: dist/*.AppImage
 
       - name: Upload diagnostic logs on failure
         if: failure()

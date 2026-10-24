@@ -106,5 +106,31 @@ if command -v ldd >/dev/null 2>&1; then
   fi
 fi
 
-# Fedora-first deliverables.
-npx tauri build --target "$TARGET" --bundles rpm,appimage
+# Fedora-first deliverables. Build targets separately so a successful RPM is
+# preserved even when AppImage tooling needs a Fedora/container-specific fix.
+BUNDLE_KIND="${1:-all}"
+
+build_rpm() {
+  npx tauri build --target "$TARGET" --bundles rpm
+}
+
+build_appimage() {
+  # GitHub Actions runs this inside a Fedora container with no FUSE device.
+  # AppImage's supported fallback is extract-and-run. NO_STRIP avoids
+  # linuxdeploy's bundled strip tool tripping on modern Fedora ELF sections.
+  APPIMAGE_EXTRACT_AND_RUN=1 NO_STRIP=true \
+    npx tauri build --target "$TARGET" --bundles appimage --verbose
+}
+
+case "$BUNDLE_KIND" in
+  rpm) build_rpm ;;
+  appimage) build_appimage ;;
+  all)
+    build_rpm
+    build_appimage
+    ;;
+  *)
+    echo "Usage: $0 [rpm|appimage|all]" >&2
+    exit 64
+    ;;
+esac
