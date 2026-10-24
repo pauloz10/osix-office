@@ -49,6 +49,17 @@ jobs:
       - name: Fetch pinned upstream
         run: ./scripts/02-fetch-base.sh
 
+      - name: Restore Rust build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            work/euro-office-lite/src-tauri/target
+          key: osix-fedora44-cargo-5c4e5fa-${{ hashFiles('work/euro-office-lite/src-tauri/Cargo.lock') }}
+          restore-keys: |
+            osix-fedora44-cargo-5c4e5fa-
+
       - name: Apply OsiX configuration
         run: ./scripts/03-customize.sh
 

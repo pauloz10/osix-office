@@ -16,12 +16,14 @@ class FedoraBuildContractTest(unittest.TestCase):
         s = (ROOT / ".github" / "workflows" / "build-fedora.yml").read_text()
         for item in ("gh ", "rsync", "bc", "java-25-openjdk-headless", "python3-pillow"):
             self.assertIn(item, s)
+        self.assertIn("actions/cache@v4", s)
 
-    def test_linux_sidecar_resources_are_bundled(self):
+    def test_linux_resource_set_replaces_windows_globs(self):
         s = (ROOT / "scripts" / "customize.py").read_text()
-        self.assertIn('"binaries/*.so"', s)
-        self.assertIn('"binaries/*.so.*"', s)
-        self.assertIn('"binaries/x2t"', s)
+        for item in ('"binaries/*.so"', '"binaries/*.so.*"', '"binaries/x2t"'):
+            self.assertIn(item, s)
+        self.assertIn('bundle["resources"] = [', s)
+        self.assertNotIn('"binaries/*.dll"', s)
 
 if __name__ == "__main__":
     unittest.main()

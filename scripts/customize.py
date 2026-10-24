@@ -29,18 +29,33 @@ bundle["longDescription"] = (
 )
 bundle["license"] = brand["license"]
 
-# Linux x2t ships shared libraries beside the sidecar. Tauri must bundle them
-# for a fully offline Fedora installation. Keep the upstream resource list and
-# add the Linux-specific patterns used by Euro-Office's own Linux CI.
-resources = bundle.setdefault("resources", [])
-for pattern in [
+# Replace the Windows-oriented upstream bundle resources with the exact
+# Linux resource set used by Euro-Office Lite's own Linux CI. Tauri treats
+# unmatched resource globs (for example binaries/*.dll) as build errors.
+bundle["icon"] = [
+    "icons/icon.png",
+    "icons/128x128.png",
+    "icons/128x128@2x.png",
+    "icons/32x32.png",
+    "icons/256x256.png",
+]
+bundle["resources"] = [
     "binaries/*.so",
     "binaries/*.so.*",
+    "binaries/*.config",
+    "binaries/*.dat",
+    "binaries/*.js",
     "binaries/x2t",
     "binaries/fonts/*",
-]:
-    if pattern not in resources:
-        resources.append(pattern)
+    "editors/sdkjs/word/*",
+    "editors/sdkjs/cell/*",
+    "editors/sdkjs/slide/*",
+    "editors/sdkjs/common/Native/*",
+    "editors/sdkjs/common/AllFonts.js",
+    "editors/sdkjs/common/libfont/engine/*",
+    "editors/web-apps/vendor/xregexp/*",
+    "templates/*",
+]
 
 # Expand desktop associations for common macro-enabled and template Office formats.
 existing = bundle.setdefault("fileAssociations", [])
@@ -62,11 +77,9 @@ for exts, mime, desc in extra:
         existing.append({"ext": exts, "mimeType": mime, "description": desc})
         seen.update(exts)
 
-# Linux-friendly dev command: the upstream main config currently contains a Windows-specific command.
-# It is irrelevant to release bundling, but removing it prevents accidental PowerShell invocation on Fedora.
-build = conf.setdefault("build", {})
-if "beforeDevCommand" in build:
-    build.pop("beforeDevCommand")
+# The pinned upstream config has a Windows-only development junction command.
+# It is not needed for production bundling and must not execute on Fedora.
+conf.setdefault("build", {}).pop("beforeDevCommand", None)
 
 backup = conf_path.with_suffix(".json.upstream")
 if not backup.exists():
