@@ -17,8 +17,7 @@ class CustomizeConfigTest(unittest.TestCase):
 
     def test_no_ai_dependencies_declared(self):
         root = Path(__file__).resolve().parents[1]
-        text = "
-".join(
+        text = "\n".join(
             p.read_text(errors="ignore")
             for p in [root / "README.md", root / "docs" / "ARCHITECTURE.md"]
         ).lower()
