@@ -6,8 +6,7 @@ from pathlib import Path
 OOXML_CORE = "[Content_Types].xml"
 
 def check(path: Path) -> int:
-    print(f"
-{path}")
+    print(f"\n{path}")
     if not path.exists():
         print("  ERROR: missing")
         return 1
