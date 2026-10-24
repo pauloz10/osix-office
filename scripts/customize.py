@@ -71,6 +71,5 @@ if "beforeDevCommand" in build:
 backup = conf_path.with_suffix(".json.upstream")
 if not backup.exists():
     backup.write_text(conf_path.read_text())
-conf_path.write_text(json.dumps(conf, indent=2) + "
-")
+conf_path.write_text(json.dumps(conf, indent=2) + "\n")
 print(f"Updated {conf_path}")
