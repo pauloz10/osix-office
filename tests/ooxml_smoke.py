@@ -28,7 +28,13 @@ def check(path: Path) -> int:
         print("  ERROR: invalid ZIP container")
         return 1
 
-if len(sys.argv) < 2:
-    print("usage: ooxml_smoke.py FILE.xlsx [FILE.xlsm ...]", file=sys.stderr)
-    raise SystemExit(2)
-raise SystemExit(max(check(Path(p)) for p in sys.argv[1:]))
+def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if not argv:
+        print("usage: ooxml_smoke.py FILE.xlsx [FILE.xlsm ...]", file=sys.stderr)
+        return 2
+    return max(check(Path(p)) for p in argv)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
