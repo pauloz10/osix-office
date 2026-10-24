@@ -1,4 +1,5 @@
 import pathlib
+import subprocess
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -27,6 +28,12 @@ class FedoraBuildContractTest(unittest.TestCase):
         s = (ROOT / "scripts" / "06-collect-artifacts.sh").read_text()
         self.assertIn('src-tauri/target', s)
         self.assertNotIn('target/release/bundle', s)
+
+    def test_artifact_collector_has_valid_bash_syntax(self):
+        subprocess.run(
+            ["bash", "-n", str(ROOT / "scripts" / "06-collect-artifacts.sh")],
+            check=True,
+        )
 
     def test_linux_resource_set_replaces_windows_globs(self):
         s = (ROOT / "scripts" / "customize.py").read_text()

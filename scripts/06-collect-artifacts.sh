@@ -9,5 +9,5 @@ while IFS= read -r -d '' f; do
   cp -f "$f" "$DIST/"
   echo "Collected: $(basename "$f")"
   found=1
-done < <(find "$BUNDLE_ROOT" -type f ( -name '*.rpm' -o -name '*.AppImage' ) -print0 2>/dev/null || true)
+done < <(find "$BUNDLE_ROOT" -type f \( -name '*.rpm' -o -name '*.AppImage' \) -print0 2>/dev/null || true)
 ((found == 1)) || { echo "No RPM/AppImage artifacts found under $BUNDLE_ROOT" >&2; exit 1; }
