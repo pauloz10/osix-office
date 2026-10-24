@@ -29,6 +29,19 @@ bundle["longDescription"] = (
 )
 bundle["license"] = brand["license"]
 
+# Linux x2t ships shared libraries beside the sidecar. Tauri must bundle them
+# for a fully offline Fedora installation. Keep the upstream resource list and
+# add the Linux-specific patterns used by Euro-Office's own Linux CI.
+resources = bundle.setdefault("resources", [])
+for pattern in [
+    "binaries/*.so",
+    "binaries/*.so.*",
+    "binaries/x2t",
+    "binaries/fonts/*",
+]:
+    if pattern not in resources:
+        resources.append(pattern)
+
 # Expand desktop associations for common macro-enabled and template Office formats.
 existing = bundle.setdefault("fileAssociations", [])
 seen = {ext for item in existing for ext in item.get("ext", [])}

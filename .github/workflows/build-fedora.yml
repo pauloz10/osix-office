@@ -7,6 +7,13 @@ on:
     tags: ['v*']
   pull_request:
 
+permissions:
+  contents: read
+
+env:
+  RUST_BACKTRACE: "1"
+  OSIX_TARGET: x86_64-unknown-linux-gnu
+
 jobs:
   test-bootstrap:
     runs-on: ubuntu-latest
@@ -23,23 +30,46 @@ jobs:
     steps:
       - name: Install checkout prerequisites
         run: dnf -y install git tar gzip findutils
+
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
       - name: Install Fedora build prerequisites
         run: |
-          dnf -y install             git curl wget file python3 nodejs npm rust cargo             gcc gcc-c++ make cmake ninja-build pkgconf-pkg-config             webkit2gtk4.1-devel openssl-devel             libappindicator-gtk3-devel librsvg2-devel libxdo-devel             gtk3-devel glib2-devel libsoup3-devel             rpm-build rpmdevtools patchelf desktop-file-utils             libarchive unzip zip jq
+          dnf -y install             git gh curl wget file python3 python3-pip python3-pillow             nodejs npm rust cargo gcc gcc-c++ make cmake ninja-build             pkgconf-pkg-config webkit2gtk4.1-devel javascriptcoregtk4.1-devel             openssl-devel libappindicator-gtk3-devel librsvg2-devel libxdo-devel             gtk3-devel glib2-devel libsoup3-devel rpm-build rpmdevtools             patchelf desktop-file-utils libarchive unzip zip jq rsync bc java-17-openjdk-headless
+
       - name: Fetch pinned upstream
         run: ./scripts/02-fetch-base.sh
+
       - name: Apply OsiX configuration
         run: ./scripts/03-customize.sh
-      - name: Run tests
+
+      - name: Run OsiX tests
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+
       - name: Build RPM and AppImage
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./scripts/04-build.sh
+
       - name: Collect packages
         run: ./scripts/06-collect-artifacts.sh
+
       - uses: actions/upload-artifact@v4
         with:
           name: osix-office-fedora-x86_64
+          if-no-files-found: error
           path: |
             dist/*.rpm
             dist/*.AppImage
+
+      - name: Upload diagnostic logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: osix-office-fedora-build-logs
+          if-no-files-found: ignore
+          path: |
+            /tmp/tauri-build.log
+            /tmp/euro-office-lite/*.log
