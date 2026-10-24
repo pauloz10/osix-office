@@ -36,8 +36,15 @@ jobs:
           persist-credentials: false
 
       - name: Install Fedora build prerequisites
-        run: |
-          dnf -y install             git gh curl wget file python3 python3-pip python3-pillow             nodejs npm rust cargo gcc gcc-c++ make cmake ninja-build             pkgconf-pkg-config webkit2gtk4.1-devel javascriptcoregtk4.1-devel             openssl-devel libappindicator-gtk3-devel librsvg2-devel libxdo-devel             gtk3-devel glib2-devel libsoup3-devel rpm-build rpmdevtools             patchelf desktop-file-utils libarchive unzip zip jq rsync bc java-17-openjdk-headless
+        run: >
+          dnf -y install
+          git gh curl wget file python3 python3-pip python3-pillow
+          nodejs npm rust cargo gcc gcc-c++ make cmake ninja-build
+          pkgconf-pkg-config webkit2gtk4.1-devel javascriptcoregtk4.1-devel
+          openssl-devel libappindicator-gtk3-devel librsvg2-devel libxdo-devel
+          gtk3-devel glib2-devel libsoup3-devel rpm-build rpmdevtools
+          patchelf desktop-file-utils libarchive unzip zip jq rsync bc
+          java-25-openjdk-headless
 
       - name: Fetch pinned upstream
         run: ./scripts/02-fetch-base.sh
