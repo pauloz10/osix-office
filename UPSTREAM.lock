@@ -1,0 +1,5 @@
+UPSTREAM_NAME=Euro-Office Lite
+UPSTREAM_REPOSITORY=https://github.com/delmarguillen/euro-office-lite.git
+UPSTREAM_TAG=v0.17.39-alpha
+UPSTREAM_COMMIT=5c4e5fa
+UPSTREAM_LICENSE=AGPL-3.0

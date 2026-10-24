@@ -1,0 +1,8 @@
+{
+  "product_name": "OsiX Office",
+  "binary_name": "osix-office",
+  "identifier": "com.osix.office",
+  "window_title": "OsiX Office",
+  "description": "Offline open-source office suite with Microsoft Office format compatibility",
+  "license": "AGPL-3.0-or-later"
+}

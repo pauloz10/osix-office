@@ -1,0 +1,45 @@
+name: Fedora packages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, fedora-main]
+    tags: ['v*']
+  pull_request:
+
+jobs:
+  test-bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s tests -p 'test_*.py' -v
+
+  build-fedora-44:
+    runs-on: ubuntu-latest
+    container: fedora:44
+    steps:
+      - name: Install checkout prerequisites
+        run: dnf -y install git tar gzip findutils
+      - uses: actions/checkout@v4
+      - name: Install Fedora build prerequisites
+        run: |
+          dnf -y install             git curl wget file python3 nodejs npm rust cargo             gcc gcc-c++ make cmake ninja-build pkgconf-pkg-config             webkit2gtk4.1-devel openssl-devel             libappindicator-gtk3-devel librsvg2-devel libxdo-devel             gtk3-devel glib2-devel libsoup3-devel             rpm-build rpmdevtools patchelf desktop-file-utils             libarchive unzip zip jq
+      - name: Fetch pinned upstream
+        run: ./scripts/02-fetch-base.sh
+      - name: Apply OsiX configuration
+        run: ./scripts/03-customize.sh
+      - name: Run tests
+        run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Build RPM and AppImage
+        run: ./scripts/04-build.sh
+      - name: Collect packages
+        run: ./scripts/06-collect-artifacts.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: osix-office-fedora-x86_64
+          path: |
+            dist/*.rpm
+            dist/*.AppImage

@@ -1,0 +1,10 @@
+work/
+dist/*
+!dist/.gitkeep
+vendor/*.tar.*
+vendor/*.zip
+*.rpm
+*.AppImage
+__pycache__/
+.pytest_cache/
+.DS_Store
