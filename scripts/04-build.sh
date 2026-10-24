@@ -115,10 +115,12 @@ build_rpm() {
 }
 
 build_appimage() {
-  # GitHub Actions runs this inside a Fedora container with no FUSE device.
-  # AppImage's supported fallback is extract-and-run. NO_STRIP avoids
-  # linuxdeploy's bundled strip tool tripping on modern Fedora ELF sections.
+  # linuxdeploy needs the x2t compatibility libraries during dependency
+  # discovery. They are shipped beside x2t by the pinned upstream dependency
+  # bundle, so expose that directory while assembling the AppImage.
+  local x2t_libdir="$PWD/src-tauri/binaries"
   APPIMAGE_EXTRACT_AND_RUN=1 NO_STRIP=true \
+    LD_LIBRARY_PATH="$x2t_libdir${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
     npx tauri build --target "$TARGET" --bundles appimage --verbose
 }
 
